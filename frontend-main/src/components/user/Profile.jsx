@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./profile.css";
 import Navbar from "../Navbar";
@@ -9,7 +9,6 @@ import HeatMapProfile from "./HeatMap";
 import { useAuth } from "../../authContext";
 
 const Profile = () => {
-  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({ username: "username" });
   const { setCurrentUser } = useAuth();
 
@@ -20,7 +19,7 @@ const Profile = () => {
       if (userId) {
         try {
           const response = await axios.get(
-            `http://localhost:3002/userProfile/${userId}`
+            `http://localhost:3000/userProfile/${userId}`
           );
           setUserDetails(response.data);
         } catch (err) {
@@ -51,19 +50,18 @@ const Profile = () => {
         </UnderlineNav.Item>
 
         <UnderlineNav.Item
-          onClick={() => navigate("/repo")}
-          icon={RepoIcon}
-          sx={{
-            backgroundColor: "transparent",
-            color: "whitesmoke",
-            "&:hover": {
-              textDecoration: "underline",
-              color: "white",
-            },
-          }}
-        >
-          Starred Repositories
-        </UnderlineNav.Item>
+           icon={RepoIcon}
+            sx={{
+              backgroundColor: "transparent",
+    color: "whitesmoke",
+    "&:hover": {
+      textDecoration: "underline",
+      color: "white",
+    },
+  }}
+>
+  Starred Repositories
+</UnderlineNav.Item>
       </UnderlineNav>
 
       <button
