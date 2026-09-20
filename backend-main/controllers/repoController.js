@@ -7,7 +7,7 @@ async function createRepository(req, res) {
   const { owner, name, issues, content, description, visibility } = req.body;
 
   try {
-    if (!name) {
+    if (!name || !String(name).trim()) {
       return res.status(400).json({ error: "Repository name is required!" });
     }
 
@@ -15,13 +15,23 @@ async function createRepository(req, res) {
       return res.status(400).json({ error: "Invalid User ID!" });
     }
 
+    const normalizedName = String(name).trim();
+    const existingRepository = await Repository.findOne({
+      owner,
+      name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+    });
+
+    if (existingRepository) {
+      return res.status(409).json({ error: "Repository with this name already exists for this user." });
+    }
+
     const newRepository = new Repository({
-      name,
+      name: normalizedName,
       description,
       visibility,
       owner,
-      content,
-      issues,
+      content: Array.isArray(content) ? content : [],
+      issues: Array.isArray(issues) ? issues : [],
     });
 
     const result = await newRepository.save();
@@ -32,7 +42,7 @@ async function createRepository(req, res) {
     });
   } catch (err) {
     console.error("Error during repository creation : ", err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 }
 
