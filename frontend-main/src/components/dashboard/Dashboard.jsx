@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./dashboard.css";
 import Navbar from "../Navbar";
 
@@ -17,9 +18,10 @@ const Dashboard = () => {
           `http://localhost:3000/repo/user/${userId}`
         );
         const data = await response.json();
-        setRepositories(data.repositories);
+        setRepositories(Array.isArray(data.repositories) ? data.repositories : []);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
+        setRepositories([]);
       }
     };
 
@@ -27,10 +29,10 @@ const Dashboard = () => {
       try {
         const response = await fetch(`http://localhost:3000/repo/all`);
         const data = await response.json();
-        setSuggestedRepositories(data);
-        console.log(suggestedRepositories);
+        setSuggestedRepositories(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
+        setSuggestedRepositories([]);
       }
     };
 
@@ -39,14 +41,17 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (searchQuery == "") {
-      setSearchResults(repositories);
-    } else {
-      const filteredRepo = repositories.filter((repo) =>
-        repo.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResults(filteredRepo);
+    const safeRepositories = Array.isArray(repositories) ? repositories : [];
+
+    if (searchQuery.trim() === "") {
+      setSearchResults(safeRepositories);
+      return;
     }
+
+    const filteredRepo = safeRepositories.filter((repo) =>
+      repo && repo.name && repo.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchResults(filteredRepo);
   }, [searchQuery, repositories]);
 
   return (
@@ -55,14 +60,18 @@ const Dashboard = () => {
       <section id="dashboard">
         <aside>
           <h3>Suggested Repositories</h3>
-          {suggestedRepositories.map((repo) => {
-            return (
-              <div key={repo._id}>
-                <h4>{repo.name}</h4>
-                <h4>{repo.description}</h4>
-              </div>
-            );
-          })}
+          {suggestedRepositories.length === 0 ? (
+            <p>No suggested repositories right now.</p>
+          ) : (
+            suggestedRepositories.map((repo) => (
+              <Link key={repo._id} to={`/repo/${repo._id}`} style={{ display: "block", marginBottom: "0.5rem" }}>
+                <div>
+                  <h4>{repo.name}</h4>
+                  <p>{repo.description || "No description provided."}</p>
+                </div>
+              </Link>
+            ))
+          )}
         </aside>
         <main>
           <h2>Your Repositories</h2>
@@ -74,14 +83,18 @@ const Dashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {searchResults.map((repo) => {
-            return (
-              <div key={repo._id}>
-                <h4>{repo.name}</h4>
-                <h4>{repo.description}</h4>
-              </div>
-            );
-          })}
+          {searchResults.length === 0 ? (
+            <p>No repositories found.</p>
+          ) : (
+            searchResults.map((repo) => (
+              <Link key={repo._id} to={`/repo/${repo._id}`} style={{ display: "block", marginBottom: "0.75rem" }}>
+                <div>
+                  <h4>{repo.name}</h4>
+                  <p>{repo.description || "No description provided."}</p>
+                </div>
+              </Link>
+            ))
+          )}
         </main>
         <aside>
           <h3>Upcoming Events</h3>
