@@ -8,6 +8,10 @@ async function createIssue(req, res) {
   const { id } = req.params;
 
   try {
+    if (!title || !description) {
+      return res.status(400).json({ error: "Issue title and description are required." });
+    }
+
     const issue = new Issue({
       title,
       description,
@@ -19,7 +23,7 @@ async function createIssue(req, res) {
     res.status(201).json(issue);
   } catch (err) {
     console.error("Error during issue creation : ", err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 }
 
@@ -50,7 +54,7 @@ async function deleteIssueById(req, res) {
   const { id } = req.params;
 
   try {
-    const issue = Issue.findByIdAndDelete(id);
+    const issue = await Issue.findByIdAndDelete(id);
 
     if (!issue) {
       return res.status(404).json({ error: "Issue not found!" });
@@ -58,7 +62,7 @@ async function deleteIssueById(req, res) {
     res.json({ message: "Issue deleted" });
   } catch (err) {
     console.error("Error during issue deletion : ", err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 }
 
@@ -66,15 +70,15 @@ async function getAllIssues(req, res) {
   const { id } = req.params;
 
   try {
-    const issues = Issue.find({ repository: id });
+    const issues = await Issue.find({ repository: id });
 
-    if (!issues) {
-      return res.status(404).json({ error: "Issues not found!" });
+    if (!issues || issues.length === 0) {
+      return res.status(200).json([]);
     }
     res.status(200).json(issues);
   } catch (err) {
     console.error("Error during issue fetching : ", err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 }
 
