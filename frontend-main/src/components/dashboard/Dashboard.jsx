@@ -1,9 +1,9 @@
+import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../Navbar";
 import HeatMapProfile from "../user/HeatMap";
-import Card from "../ui/Card";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import Badge from "../ui/Badge";
@@ -96,7 +96,7 @@ const Dashboard = () => {
         <header className="orbit-dashboard-header">
           <div>
             <h1>Good morning, {userDetails?.username || "Developer"}</h1>
-            <p className="orbit-text-muted">Here&apos;s what&apos;s happening across your workspace.</p>
+            <p className="orbit-text-muted">Your developer workspace</p>
           </div>
           <div>
             <Link to="/create">
@@ -109,42 +109,42 @@ const Dashboard = () => {
           {/* MAIN WORKSPACE */}
           <div className="orbit-dashboard-main">
             
-            {/* SEARCH */}
-            <div className="orbit-search-container">
-              <Input
-                type="text"
-                value={searchQuery}
-                placeholder="Search repositories..."
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-
             {/* YOUR REPOSITORIES */}
             <section className="orbit-dashboard-section">
-              <h2>Your Repositories</h2>
+              <div className="orbit-dashboard-section-header">
+                <h2>Your Repositories</h2>
+                <div className="orbit-search-container">
+                  <Input
+                    type="text"
+                    value={searchQuery}
+                    placeholder="Search repositories..."
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
               
               {isLoadingRepos ? (
                 <div className="orbit-repo-grid">
-                  <Card className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></Card>
-                  <Card className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></Card>
+                  <div className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></div>
+                  <div className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></div>
                 </div>
               ) : repoError ? (
-                <Card className="orbit-error-state">
+                <div className="orbit-error-state">
                   <p>{repoError}</p>
                   <Button variant="outline" onClick={fetchRepositories} style={{ marginTop: '12px' }}>Retry</Button>
-                </Card>
+                </div>
               ) : searchResults.length === 0 ? (
-                <Card className="orbit-empty-state">
+                <div className="orbit-empty-state">
                   <p>No repositories found.</p>
                   <Link to="/create">
-                    <Button variant="primary" style={{ marginTop: '12px' }}>Create Repository</Button>
+                    <Button variant="primary">Create Repository</Button>
                   </Link>
-                </Card>
+                </div>
               ) : (
                 <div className="orbit-repo-grid">
                   {searchResults.map((repo) => (
                     <Link key={repo._id} to={`/repo/${repo._id}`} className="orbit-repo-card-link">
-                      <Card className="orbit-repo-card">
+                      <div className="orbit-repo-card">
                         <div className="orbit-repo-card-header">
                           <h4 className="orbit-repo-name">
                             <span className="orbit-repo-icon">◇</span> {repo.name}
@@ -160,7 +160,7 @@ const Dashboard = () => {
                           )}
                           <span className="orbit-repo-arrow">→</span>
                         </div>
-                      </Card>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -170,9 +170,9 @@ const Dashboard = () => {
             {/* CONTRIBUTION ACTIVITY */}
             <section className="orbit-dashboard-section">
               <h2>Contribution Activity</h2>
-              <Card className="orbit-activity-card">
+              <div className="orbit-activity-card">
                 <HeatMapProfile />
-              </Card>
+              </div>
             </section>
 
             {/* EXPLORE REPOSITORIES */}
@@ -181,28 +181,34 @@ const Dashboard = () => {
               
               {isLoadingSuggested ? (
                 <div className="orbit-repo-grid">
-                  <Card className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></Card>
+                  <div className="orbit-skeleton-card"><div className="skeleton-line" /><div className="skeleton-line short" /></div>
                 </div>
               ) : suggestedError ? (
-                <Card className="orbit-error-state">
+                <div className="orbit-error-state">
                   <p>{suggestedError}</p>
                   <Button variant="outline" onClick={fetchSuggestedRepositories} style={{ marginTop: '12px' }}>Retry</Button>
-                </Card>
+                </div>
               ) : suggestedRepositories.length === 0 ? (
-                <Card className="orbit-empty-state">
-                  <p>No repositories to explore yet.</p>
-                </Card>
+                <div className="orbit-empty-state" style={{ padding: '24px' }}>
+                  <p style={{ margin: 0 }}>No repositories to explore yet.</p>
+                </div>
               ) : (
                 <div className="orbit-repo-grid">
-                  {suggestedRepositories.slice(0, 6).map((repo) => (
+                  {suggestedRepositories.slice(0, 4).map((repo) => (
                     <Link key={repo._id} to={`/repo/${repo._id}`} className="orbit-repo-card-link">
-                      <Card className="orbit-explore-card">
+                      <div className="orbit-explore-card">
                         <div className="orbit-explore-card-header">
                           <h4 className="orbit-repo-name">{repo.name}</h4>
                           <Badge variant="neutral">Public</Badge>
                         </div>
                         <p className="orbit-repo-desc">{repo.description || "No description provided."}</p>
-                      </Card>
+                        <div className="orbit-repo-meta">
+                           {repo.language ? (
+                            <span><span className="orbit-lang-dot"></span>{repo.language}</span>
+                          ) : null}
+                          <span className="orbit-repo-arrow">→</span>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -213,23 +219,26 @@ const Dashboard = () => {
           {/* SIDEBAR */}
           <aside className="orbit-dashboard-sidebar">
             {/* PROFILE IDENTITY */}
-            <Card className="orbit-profile-identity">
+            <div className="orbit-profile-identity">
               <div className="orbit-profile-avatar">{initials}</div>
               <div className="orbit-profile-info">
                 <h4>{userDetails?.username || "Developer"}</h4>
-                <p>@{userDetails?.username || "user"}</p>
+                <p>Developer</p>
               </div>
-              <Link to="/profile" className="orbit-profile-link">View Profile →</Link>
-            </Card>
+              <Link to="/profile" className="orbit-profile-link" aria-label="View Profile">
+                →
+              </Link>
+            </div>
 
             {/* QUICK ACTIONS */}
-            <Card className="orbit-quick-actions">
+            <div className="orbit-quick-actions">
               <h4>Quick Actions</h4>
               <ul>
                 <li><Link to="/create"><span>+</span> New Repository</Link></li>
-                <li><Link to="/profile"><span>⚙</span> Settings</Link></li>
+                <li><Link to="/repo/all"><span>◇</span> Explore</Link></li>
+                <li><Link to="/profile"><span>👤</span> Profile</Link></li>
               </ul>
-            </Card>
+            </div>
           </aside>
         </div>
       </main>

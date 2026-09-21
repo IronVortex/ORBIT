@@ -1,36 +1,47 @@
 /* Dashboard specific CSS */
 
 .orbit-dashboard-page {
-  min-height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 64px);
   background-color: var(--bg-main);
 }
 
 .orbit-dashboard-container {
-  max-width: 1400px;
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 32px;
+  padding: 28px 32px 48px;
 }
 
 /* Header */
 .orbit-dashboard-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-2xl);
+  align-items: center;
+  margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: var(--spacing-md);
+  gap: 16px;
+  min-height: 80px;
 }
 
 .orbit-dashboard-header h1 {
-  margin-bottom: var(--spacing-xs);
-  font-size: var(--text-3xl);
+  margin-bottom: 4px;
+  font-size: 28px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.orbit-dashboard-header p {
+  margin: 0;
+  font-size: 14px;
 }
 
 /* Grid Layout */
 .orbit-dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-xl);
+  gap: 32px;
+  align-items: start;
 }
 
 @media (min-width: 1024px) {
@@ -43,35 +54,45 @@
 .orbit-dashboard-main {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: 40px;
+  min-width: 0;
 }
 
-.orbit-dashboard-section h2 {
-  font-size: var(--text-xl);
-  margin-bottom: var(--spacing-md);
+.orbit-dashboard-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.orbit-dashboard-section-header h2,
+.orbit-dashboard-section > h2 {
+  font-size: 20px;
+  margin: 0;
   color: var(--text-primary);
   font-weight: var(--font-weight-semibold);
 }
 
+.orbit-dashboard-section > h2 {
+  margin-bottom: 20px;
+}
+
 .orbit-search-container {
-  margin-bottom: var(--spacing-lg);
+  flex: 1;
+  max-width: 320px;
 }
 
 /* Repo Grids */
 .orbit-repo-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
 @media (min-width: 768px) {
   .orbit-repo-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  .orbit-dashboard-main > .orbit-dashboard-section .orbit-repo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -87,35 +108,37 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-lg);
-  border-radius: 16px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 24px;
+  border-radius: 12px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   border: 1px solid var(--border-color);
   background-color: var(--bg-surface);
+  box-shadow: var(--shadow-subtle);
+  overflow-wrap: anywhere;
 }
 
 .orbit-repo-card:hover, .orbit-explore-card:hover {
   transform: translateY(-2px);
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-medium);
 }
 
 .orbit-repo-card-header, .orbit-explore-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--spacing-sm);
-  gap: var(--spacing-sm);
+  margin-bottom: 12px;
+  gap: 12px;
 }
 
 .orbit-repo-name {
-  font-size: var(--text-base);
+  font-size: 16px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .orbit-repo-icon {
@@ -124,11 +147,11 @@
 }
 
 .orbit-repo-desc {
-  font-size: var(--text-sm);
+  font-size: 14px;
   color: var(--text-secondary);
   flex-grow: 1;
-  margin-bottom: var(--spacing-md);
-  line-height: var(--line-height-relaxed);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -139,15 +162,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--text-xs);
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: auto;
 }
 
 .orbit-lang-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: #f1e05a;
   margin-right: 6px;
@@ -155,9 +178,10 @@
 
 .orbit-repo-arrow {
   opacity: 0;
-  transform: translateX(-5px);
-  transition: all 0.2s ease;
-  color: var(--color-primary);
+  transform: translateX(-4px);
+  transition: all 0.15s ease;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .orbit-repo-card:hover .orbit-repo-arrow {
@@ -167,77 +191,94 @@
 
 .orbit-explore-card {
   background-color: var(--bg-main);
+  padding: 20px;
+}
+
+/* Sidebar */
+.orbit-dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 /* Profile Identity */
 .orbit-profile-identity {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  padding: var(--spacing-xl);
-  border-radius: 16px;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
 }
 
 .orbit-profile-avatar {
-  width: 80px;
-  height: 80px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--orbit-indigo) 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-2xl);
+  font-size: 18px;
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
-  border: 4px solid var(--bg-main);
-  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.orbit-profile-info {
+  flex-grow: 1;
+  min-width: 0;
 }
 
 .orbit-profile-info h4 {
-  margin: 0 0 var(--spacing-xs) 0;
-  font-size: var(--text-lg);
+  margin: 0 0 4px 0;
+  font-size: 16px;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .orbit-profile-info p {
-  margin: 0 0 var(--spacing-md) 0;
-  font-size: var(--text-sm);
+  margin: 0;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .orbit-profile-link {
-  display: inline-block;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: all 0.2s;
-  width: 100%;
+  font-size: 18px;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 .orbit-profile-link:hover {
-  background-color: var(--bg-surface-hover);
   color: var(--color-primary);
+  background-color: var(--bg-surface-hover);
 }
 
 /* Quick Actions */
 .orbit-quick-actions {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-lg);
-  border-radius: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
 }
 
 .orbit-quick-actions h4 {
-  font-size: var(--text-sm);
+  font-size: 13px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: var(--spacing-md);
+  margin: 0 0 16px 0;
 }
 
 .orbit-quick-actions ul {
@@ -246,59 +287,74 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .orbit-quick-actions a {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  color: var(--text-secondary);
+  gap: 12px;
+  color: var(--text-primary);
   text-decoration: none;
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  transition: all 0.2s;
-  font-size: var(--text-sm);
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-size: 14px;
+  border: 1px solid transparent;
 }
 
 .orbit-quick-actions a:hover {
   background-color: var(--bg-main);
+  border-color: var(--border-color);
   color: var(--color-primary);
 }
 
 .orbit-quick-actions span {
   color: var(--text-muted);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
 }
 
 /* States */
 .orbit-empty-state {
   text-align: center;
-  padding: var(--spacing-3xl) var(--spacing-lg);
+  padding: 48px 24px;
   background-color: transparent;
   border: 1px dashed var(--border-color);
+  border-radius: 12px;
   color: var(--text-muted);
+}
+
+.orbit-empty-state p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
 }
 
 .orbit-error-state {
   text-align: center;
-  padding: var(--spacing-xl);
+  padding: 24px;
   background-color: rgba(239, 68, 68, 0.05);
-  border-color: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
   color: var(--color-danger);
 }
 
 .orbit-skeleton-card {
-  height: 140px;
+  height: 120px;
   background-color: var(--bg-surface);
-  border-color: var(--border-color);
-  padding: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
 .skeleton-line {
-  height: 20px;
+  height: 16px;
   background-color: var(--bg-main);
   border-radius: 4px;
   width: 60%;
@@ -316,12 +372,21 @@
 
 /* Heatmap Card */
 .orbit-activity-card {
-  padding: var(--spacing-xl);
-  border-radius: 16px;
+  padding: 24px;
+  border-radius: 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
   overflow-x: auto;
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .orbit-dashboard-container {
+    padding: 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .orbit-dashboard-container {
     padding: 16px;
@@ -329,5 +394,21 @@
   .orbit-dashboard-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .orbit-dashboard-section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .orbit-search-container {
+    max-width: 100%;
+  }
+
+  .orbit-repo-grid {
+    grid-template-columns: 1fr;
   }
 }
